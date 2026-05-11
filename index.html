@@ -89,6 +89,31 @@ body::before {
   text-transform: uppercase; transition: color 0.2s;
 }
 .topbar-nav a:hover { color: var(--accent); }
+/* Hamburger */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 4px; background: none; border: none;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: all 0.3s;
+}
+.mobile-nav {
+  display: none; position: fixed; top: 57px; left: 0; right: 0;
+  background: rgba(10,10,10,0.97); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); z-index: 99;
+  padding: 20px 24px; flex-direction: column; gap: 0;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--muted); text-decoration: none; letter-spacing: 2px;
+  text-transform: uppercase; padding: 14px 0;
+  border-bottom: 1px solid var(--border); transition: color 0.2s;
+}
+.mobile-nav a:last-child { border-bottom: none; }
+.mobile-nav a:hover { color: var(--accent); }
 
 /* HERO */
 .hero {
@@ -255,7 +280,7 @@ body::before {
 .project-card:hover { background: var(--surface2); }
 .project-card.featured {
   grid-column: span 2; display: grid;
-  grid-template-columns: 1fr auto; gap: 40px; align-items: start;
+  grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;
 }
 .project-num { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 3px; margin-bottom: 20px; }
 .project-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.5px; }
@@ -365,6 +390,49 @@ body::before {
 .ticker-icon { font-size: 28px; margin-bottom: 10px; }
 .ticker-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
 
+/* DINO GAME CARD */
+.dino-card {
+  grid-column: span 2;
+  background: linear-gradient(135deg, #050a0f 0%, #0a0f1a 50%, #050a0f 100%);
+  border: 1px solid rgba(0,229,255,0.25);
+  position: relative; overflow: hidden;
+  padding: 40px;
+}
+.dino-card::before {
+  content: '🦕';
+  position: absolute; right: -20px; top: -20px;
+  font-size: 220px; opacity: 0.04; line-height: 1;
+  pointer-events: none;
+}
+.dino-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,229,255,0.015) 2px,
+    rgba(0,229,255,0.015) 4px
+  );
+  pointer-events: none;
+}
+.dino-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; background: rgba(0,229,255,0.08);
+  border: 1px solid rgba(0,229,255,0.3); border-radius: 100px;
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  color: var(--cyan); letter-spacing: 2px; margin-bottom: 20px;
+  animation: dinoPulse 2s ease-in-out infinite;
+}
+.dino-badge::before {
+  content: ''; width: 6px; height: 6px; background: var(--cyan);
+  border-radius: 50%; animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes dinoPulse {
+  0%, 100% { box-shadow: 0 0 0px rgba(0,229,255,0); }
+  50% { box-shadow: 0 0 16px rgba(0,229,255,0.2); }
+}
+
 /* FOOTER */
 footer { border-top: 1px solid var(--border); padding: 60px; }
 .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 40px; flex-wrap: wrap; }
@@ -378,44 +446,144 @@ footer { border-top: 1px solid var(--border); padding: 60px; }
 
 /* ANIMATIONS */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.reveal.visible { opacity: 1; transform: none; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal-delay-1 { transition-delay: 0.1s; }
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
+.project-card, .brainfly-card, .dino-card, .ai-card, .ticker-box {
+  opacity: 1 !important;
+  animation: cardIn 0.5s ease both;
+}
 
-/* RESPONSIVE */
-@media (max-width: 1024px) { .ai-projects-grid { grid-template-columns: 1fr; } }
-@media (max-width: 768px) {
-  .hero { padding: 100px 24px 60px; }
-  .section { padding: 60px 24px; }
-  .topbar { padding: 16px 24px; }
-  .topbar-nav { display: none; }
-  .hero-cta { flex-direction: column; }
-  .about-grid { grid-template-columns: 1fr; }
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
-  .brainfly-card { grid-column: span 1; }
-  .ai-projects-grid { grid-template-columns: 1fr; }
-  .ai-card { padding: 32px 24px; }
-  .footer-inner { flex-direction: column; text-align: center; }
-  .footer-links { flex-wrap: wrap; justify-content: center; }
-  .ticker-row { flex-wrap: wrap; }
-  .hero-scroll { left: 24px; }
+/* TWO COL CARD LAYOUT */
+.card-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
 }
-@media (max-width: 480px) {
-  .hero-name { letter-spacing: -2px; }
-  .section-title { letter-spacing: -1px; }
-  .ai-card-title { font-size: 20px; }
-  .project-links { flex-direction: column; }
-  .project-links .plink { justify-content: center; }
-}
+.card-wide { grid-column: span 2; }
+
+/* ===================== */
+/* RESPONSIVE BREAKPOINTS */
+/* ===================== */
+
+/* TABLET LANDSCAPE: 769px - 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
   .hero { padding: 100px 40px 80px; }
   .section { padding: 80px 40px; }
   .topbar { padding: 18px 30px; }
   .about-grid { gap: 40px; }
+  .ai-projects-grid { grid-template-columns: 1fr 1fr; }
   .ai-card { padding: 36px; }
+  .projects-grid { grid-template-columns: 1fr 1fr; }
+  .card-two-col { grid-template-columns: 1fr 1fr; gap: 30px; }
+  .project-card { padding: 30px; }
+  .brainfly-card { padding: 40px; }
+  .dino-card { padding: 30px; }
+  .ticker-row { flex-wrap: wrap; gap: 8px; }
+  .ticker-box { min-width: calc(33% - 8px); flex: unset; }
+  footer { padding: 40px; }
+}
+
+/* TABLET PORTRAIT: 481px - 768px */
+@media (max-width: 768px) {
+  /* Nav */
+  .topbar { padding: 14px 20px; }
+  .topbar-nav { display: none; }
+
+  /* Hero */
+  .hero { padding: 90px 20px 60px; min-height: 100svh; }
+  .hero-orb { width: 300px; height: 300px; right: -80px; }
+  .hero-orb2 { width: 200px; height: 200px; }
+  .hero-cta { flex-direction: column; gap: 12px; }
+  .btn-primary, .btn-secondary { justify-content: center; text-align: center; }
+  .hero-scroll { left: 20px; bottom: 24px; }
+
+  /* Sections */
+  .section { padding: 60px 20px; }
+  .section-title { margin-bottom: 40px; }
+
+  /* About */
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-stats { grid-template-columns: 1fr 1fr; }
+
+  /* AI Projects */
+  .ai-projects-grid { grid-template-columns: 1fr; gap: 16px; }
+  .ai-card { padding: 28px 20px; }
+
+  /* Project Grid - single column */
+  .projects-grid { grid-template-columns: 1fr; gap: 2px; }
+  .card-wide { grid-column: span 1; }
+  .project-card.featured { grid-column: span 1; grid-template-columns: 1fr; display: flex; flex-direction: column; }
+  .brainfly-card { grid-column: span 1; padding: 28px 20px; }
+  .dino-card { grid-column: span 1; padding: 28px 20px; }
+  .project-card { padding: 28px 20px; }
+
+  /* Two-col inner layouts -> single col */
+  .card-two-col { grid-template-columns: 1fr !important; gap: 24px; }
+  .dino-inner { grid-template-columns: 1fr !important; }
+
+  /* Dino images stack vertically */
+  .dino-imgs { flex-direction: column; gap: 10px; }
+
+  /* Ticker */
+  .ticker-row { flex-wrap: wrap; gap: 8px; }
+  .ticker-box { min-width: calc(50% - 4px); flex: unset; padding: 18px 12px; }
+
+  /* Footer */
+  footer { padding: 40px 20px; }
+  .footer-inner { flex-direction: column; text-align: center; gap: 24px; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .footer-brand { font-size: 22px; }
+  .footer-copy { font-size: 9px; letter-spacing: 1px; }
+
+  /* Custom cursor off on touch */
+  .cursor, .cursor-trail { display: none; }
+  body { cursor: auto; }
+  a, button, .plink, .btn-primary, .btn-secondary, .footer-link { cursor: pointer !important; }
+}
+
+/* MOBILE: up to 480px */
+@media (max-width: 480px) {
+  .topbar { padding: 12px 16px; }
+  .topbar-logo { font-size: 11px; letter-spacing: 2px; }
+
+  .hero { padding: 80px 16px 60px; }
+  .hero-name { letter-spacing: -1px; }
+  .hero-subtitle { font-size: 22px; }
+  .hero-desc { font-size: 14px; }
+  .hero-pills { gap: 8px; }
+  .pill { padding: 6px 12px; font-size: 10px; }
+
+  .section { padding: 50px 16px; }
+  .section-title { letter-spacing: -1px; font-size: 32px; }
+
+  .about-stats { grid-template-columns: 1fr 1fr; }
+  .stat-num { font-size: 32px; }
+
+  .ai-card { padding: 22px 16px; }
+  .ai-card-title { font-size: 18px; }
+
+  .project-card { padding: 22px 16px; }
+  .project-title { font-size: 18px; }
+  .brainfly-card { padding: 22px 16px; }
+  .dino-card { padding: 22px 16px; }
+
+  .project-links { flex-direction: column; gap: 8px; }
+  .project-links .plink { justify-content: center; width: 100%; }
+  .plink { padding: 10px 14px; font-size: 9px; }
+
+  .ticker-row { gap: 6px; }
+  .ticker-box { min-width: calc(50% - 3px); padding: 14px 8px; }
+  .ticker-icon { font-size: 22px; }
+
+  footer { padding: 32px 16px; }
+  .footer-link { padding: 10px 14px; font-size: 9px; }
+
+  .brainfly-card::before { font-size: 120px; }
+  .dino-card::before { font-size: 130px; }
 }
 </style>
 </head>
@@ -688,9 +856,9 @@ footer { border-top: 1px solid var(--border); padding: 60px; }
       <div><img src="agri1.png" class="project-img" alt="Agriculture Robot"></div>
     </div>
 
-    <!-- ===== NEW: SMART DISTANCE ALERT SYSTEM ===== -->
-    <div class="project-card" style="grid-column: span 2;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start;">
+    <!-- SMART DISTANCE ALERT SYSTEM -->
+    <div class="project-card card-wide">
+      <div class="card-two-col">
         <div>
           <div class="coming-soon-badge">⏳ NEW PROJECT</div>
           <div class="project-num">08</div>
@@ -717,6 +885,46 @@ footer { border-top: 1px solid var(--border); padding: 60px; }
         </div>
         <div>
           <img src="distance_alert.jpg" class="project-img" alt="Smart Distance Alert System" style="margin-top:0;">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DINO RUNNER GAME ===== -->
+    <div class="project-card dino-card">
+      <div class="dino-inner card-two-col" style="position:relative; z-index:1;">
+        <div>
+          <div class="dino-badge">🎮 GAME PROJECT</div>
+          <div class="project-num">09</div>
+          <div class="project-title" style="font-size:26px;">🦕 Dino Runner — Arduino OLED Game</div>
+          <div class="project-tags">
+            <span class="ptag" style="color:var(--cyan);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06);">Arduino UNO</span>
+            <span class="ptag" style="color:var(--cyan);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06);">OLED Display</span>
+            <span class="ptag" style="color:var(--cyan);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06);">Push Button</span>
+            <span class="ptag" style="color:var(--cyan);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06);">Breadboard</span>
+            <span class="ptag" style="color:var(--cyan);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06);">Game Dev</span>
+          </div>
+          <p class="project-desc">
+            A fully playable <strong style="color:var(--cyan);">Dino Runner game</strong> built entirely on Arduino — no computer screen needed!
+            The pixel-art dinosaur runs automatically on a crisp <strong style="color:#f0f0f0;">128×64 OLED display</strong> and you press a single physical button to
+            <strong style="color:var(--accent);">jump</strong> over incoming obstacles.
+            Features an exciting <strong style="color:var(--accent2);">Double Jump</strong> mechanic so you can clear taller barriers mid-air.
+            The score increases as you survive longer, and the game speeds up over time for extra challenge.
+            Full wiring tutorial, circuit diagram, and complete Arduino code are dropping soon — stay tuned!
+          </p>
+          <div class="ai-features" style="margin-bottom:24px;">
+            <div class="ai-feature"><div class="ai-feature-dot" style="background:var(--cyan);"></div><span>Runs on Arduino UNO + 128×64 OLED</span></div>
+            <div class="ai-feature"><div class="ai-feature-dot" style="background:var(--cyan);"></div><span>Single button with Double Jump mechanic</span></div>
+            <div class="ai-feature"><div class="ai-feature-dot" style="background:var(--cyan);"></div><span>Pixel-art dino & obstacle sprites</span></div>
+            <div class="ai-feature"><div class="ai-feature-dot" style="background:var(--cyan);"></div><span>Live score — speeds up over time</span></div>
+          </div>
+          <div class="project-links">
+            <span class="plink" style="color:var(--accent2);border-color:rgba(255,204,2,0.3);background:rgba(255,204,2,0.06);cursor:default;">⏳ Full Tutorial — Coming Soon</span>
+            <span class="plink" style="color:var(--accent2);border-color:rgba(255,204,2,0.3);background:rgba(255,204,2,0.06);cursor:default;">💻 Arduino Code — Coming Soon</span>
+          </div>
+        </div>
+        <div class="dino-imgs" style="display:flex;flex-direction:column;gap:14px;">
+          <img src="Screenshot_2026-05-10_215744.png" class="project-img" alt="Dino Runner — Start Screen (Press BTN to start, Double Jump ON)" style="margin:0; border-color:rgba(0,229,255,0.2);">
+          <img src="Screenshot_2026-05-10_215755.png" class="project-img" alt="Dino Runner — Gameplay on OLED display" style="margin:0; border-color:rgba(0,229,255,0.2);">
         </div>
       </div>
     </div>
@@ -750,6 +958,7 @@ footer { border-top: 1px solid var(--border); padding: 60px; }
 </footer>
 
 <script>
+  // CURSOR
   const cursor = document.getElementById('cursor');
   const trail = document.getElementById('cursorTrail');
   let mx = 0, my = 0, tx = 0, ty = 0;
@@ -760,25 +969,17 @@ footer { border-top: 1px solid var(--border); padding: 60px; }
     el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; trail.style.width = '56px'; trail.style.height = '56px'; });
     el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; trail.style.width = '36px'; trail.style.height = '36px'; });
   });
-  const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
+
+  // REVEAL — CSS class based, cards always visible by default
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  const cardObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => { if (entry.isIntersecting) { setTimeout(() => { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }, 80 * (i % 3)); } });
-  }, { threshold: 0.05 });
-  document.querySelectorAll('.project-card, .brainfly-card').forEach(card => {
-    card.style.opacity = '0'; card.style.transform = 'translateY(30px)';
-    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease, background 0.4s';
-    cardObserver.observe(card);
-  });
-  const aiObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => { if (entry.isIntersecting) { setTimeout(() => { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }, 100 * i); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.ai-card').forEach(card => { card.style.opacity = '0'; card.style.transform = 'translateY(40px)'; card.style.transition = 'opacity 0.7s ease, transform 0.7s ease'; aiObserver.observe(card); });
-  document.querySelectorAll('.ticker-box').forEach((box, i) => {
-    box.style.opacity = '0'; box.style.transform = 'translateY(20px)';
-    box.style.transition = `opacity 0.5s ${i * 0.1}s ease, transform 0.5s ${i * 0.1}s ease, all 0.3s`;
-    const tickObs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { box.style.opacity = '1'; box.style.transform = 'translateY(0)'; } }); }, { threshold: 0.2 });
-    tickObs.observe(box);
+
+  // Make ALL cards always visible — no JS opacity:0 hiding
+  document.querySelectorAll('.project-card, .brainfly-card, .ai-card, .dino-card, .ticker-box').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
   });
 </script>
 </body>
